@@ -389,61 +389,68 @@ with tab_classify:
                                     encoded = base64.b64encode(buf.getvalue()).decode()
 
                                     client = openai.OpenAI(api_key=openai_key)
+                                    system_prompt = (
+                                        "Kamu adalah AI yang berperan sebagai evaluator desain grafis profesional.\n\n"
+                                        "Tugas kamu adalah menganalisis kualitas sebuah desain (khususnya poster atau desain media sosial) "
+                                        "berdasarkan prinsip dan teori desain grafis yang telah diakui secara akademis.\n\n"
+                                        "Gunakan pendekatan berikut dalam analisis:\n"
+                                        "1. Teori Gestalt (proximity, similarity, continuity, closure)\n"
+                                        "2. Psikologi warna\n"
+                                        "3. Aturan warna 60:30:10\n"
+                                        "4. Golden ratio / komposisi visual\n"
+                                        "5. Prinsip desain dasar:\n"
+                                        "   - Balance (keseimbangan)\n"
+                                        "   - Contrast (kontras)\n"
+                                        "   - Visual hierarchy (hierarki visual)\n"
+                                        "   - Alignment (perataan)\n"
+                                        "   - Repetition (pengulangan)\n"
+                                        "   - Proximity (kedekatan)\n"
+                                        "   - Unity (kesatuan)\n"
+                                        "6. Tipografi:\n"
+                                        "   - Readability\n"
+                                        "   - Legibility\n\n"
+                                        "Berikan output dengan format berikut:\n\n"
+                                        "1. Style desain (misalnya: Modern, Minimalist, Retro-Vintage, dll)\n"
+                                        "2. Skor total (0–100)\n"
+                                        "3. Kategori kualitas:\n"
+                                        "   - Sangat Baik (85–100)\n"
+                                        "   - Baik (70–84)\n"
+                                        "   - Cukup (55–69)\n"
+                                        "   - Kurang (<55)\n\n"
+                                        "4. Analisis detail per aspek:\n"
+                                        "   - Warna (berdasarkan psikologi warna & aturan 60:30:10)\n"
+                                        "   - Layout (grid system & golden ratio)\n"
+                                        "   - Tipografi (readability & hierarchy)\n"
+                                        "   - Komposisi (Gestalt & balance)\n\n"
+                                        "Untuk setiap aspek, berikan:\n"
+                                        "- Skor\n"
+                                        "- Penjelasan singkat berbasis teori\n"
+                                        "- Kesimpulan (baik / cukup / kurang)\n\n"
+                                        "5. Ringkasan dalam bentuk tabel (Aspek, Skor, Status)\n\n"
+                                        "6. Rekomendasi perbaikan yang spesifik, praktis, dan dapat diterapkan\n\n"
+                                        "Gunakan bahasa Indonesia yang formal namun tetap jelas dan mudah dipahami.\n"
+                                        "Pastikan analisis bersifat objektif, tidak subjektif, dan selalu dikaitkan dengan teori desain."
+                                    )
+
+                                    user_text = (
+                                        f"Analisis karya desain grafis pada gambar berikut.\n"
+                                        f"Catatan: Hasil prediksi awal model mengelompokkannya sebagai gaya '{top_class}' "
+                                        f"dengan tingkat kepercayaan {top_prob*100:.1f}%."
+                                    )
+
                                     response = client.chat.completions.create(
                                         model="gpt-4o",
                                         messages=[
                                             {
                                                 "role": "system",
-                                                "content": "Kamu adalah AI evaluator dan pakar desain grafis profesional."
+                                                "content": system_prompt,
                                             },
                                             {
                                                 "role": "user",
                                                 "content": [
                                                     {
                                                         "type": "text",
-                                                        "text": (
-                                                            f"Kamu adalah AI yang berperan sebagai evaluator desain grafis profesional.\n\n"
-                                                            f"Tugas kamu adalah menganalisis kualitas sebuah desain (khususnya poster atau desain media sosial) "
-                                                            f"berdasarkan prinsip dan teori desain grafis yang telah diakui secara akademis.\n\n"
-                                                            f"Model sebelumnya mendeteksi desain ini sebagai '{top_class}' dengan tingkat kepercayaan {top_prob*100:.1f}%.\n\n"
-                                                            f"Gunakan pendekatan berikut dalam analisis:\n"
-                                                            f"1. Teori Gestalt (proximity, similarity, continuity, closure)\n"
-                                                            f"2. Psikologi warna\n"
-                                                            f"3. Aturan warna 60:30:10\n"
-                                                            f"4. Golden ratio / komposisi visual\n"
-                                                            f"5. Prinsip desain dasar:\n"
-                                                            f"   - Balance (keseimbangan)\n"
-                                                            f"   - Contrast (kontras)\n"
-                                                            f"   - Visual hierarchy (hierarki visual)\n"
-                                                            f"   - Alignment (perataan)\n"
-                                                            f"   - Repetition (pengulangan)\n"
-                                                            f"   - Proximity (kedekatan)\n"
-                                                            f"   - Unity (kesatuan)\n"
-                                                            f"6. Tipografi:\n"
-                                                            f"   - Readability\n"
-                                                            f"   - Legibility\n\n"
-                                                            f"Berikan output dengan format berikut:\n\n"
-                                                            f"1. Style desain (misalnya: Modern, Minimalist, Retro-Vintage, dll)\n"
-                                                            f"2. Skor total (0–100)\n"
-                                                            f"3. Kategori kualitas:\n"
-                                                            f"   - Sangat Baik (85–100)\n"
-                                                            f"   - Baik (70–84)\n"
-                                                            f"   - Cukup (55–69)\n"
-                                                            f"   - Kurang (<55)\n\n"
-                                                            f"4. Analisis detail per aspek:\n"
-                                                            f"   - Warna (berdasarkan psikologi warna & aturan 60:30:10)\n"
-                                                            f"   - Layout (grid system & golden ratio)\n"
-                                                            f"   - Tipografi (readability & hierarchy)\n"
-                                                            f"   - Komposisi (Gestalt & balance)\n\n"
-                                                            f"Untuk setiap aspek, berikan:\n"
-                                                            f"- Skor\n"
-                                                            f"- Penjelasan singkat berbasis teori\n"
-                                                            f"- Kesimpulan (baik / cukup / kurang)\n\n"
-                                                            f"5. Ringkasan dalam bentuk tabel (Aspek, Skor, Status)\n\n"
-                                                            f"6. Rekomendasi perbaikan yang spesifik, praktis, dan dapat diterapkan\n\n"
-                                                            f"Gunakan bahasa Indonesia yang formal namun tetap jelas dan mudah dipahami.\n"
-                                                            f"Pastikan analisis bersifat objektif, tidak subjektif, dan selalu dikaitkan dengan teori desain."
-                                                        ),
+                                                        "text": user_text,
                                                     },
                                                     {
                                                         "type": "image_url",
