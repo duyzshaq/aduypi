@@ -394,13 +394,7 @@ with tab_classify:
                                         messages=[
                                             {
                                                 "role": "system",
-                                                "content": (
-                                                    "Kamu adalah seorang evaluator dan pakar desain grafis profesional.\n"
-                                                    "Tugasmu adalah menganalisis estetika dan kualitas karya desain grafis secara ilmiah, "
-                                                    "objektif, dan edukatif berdasarkan teori desain (Gestalt, psikologi warna, aturan 60:30:10, golden ratio, "
-                                                    "hirarki visual, dan tipografi).\n\n"
-                                                    "Gunakan bahasa Indonesia yang formal, sopan, dan jelas."
-                                                ),
+                                                "content": "Kamu adalah AI evaluator dan pakar desain grafis profesional."
                                             },
                                             {
                                                 "role": "user",
@@ -408,31 +402,61 @@ with tab_classify:
                                                     {
                                                         "type": "text",
                                                         "text": (
-                                                            f"Mohon analisis gambar desain terlampir yang terdeteksi bergaya '{top_class}' "
-                                                            f"dengan tingkat kepercayaan {top_prob*100:.1f}%.\n\n"
-                                                            f"Berikan evaluasi komprehensif dengan format berikut:\n"
-                                                            f"1. **Style Desain**: Konfirmasi atau ulasan gaya visualnya.\n"
-                                                            f"2. **Skor Total (0–100)** dan Kategori Kualitas (Sangat Baik / Baik / Cukup / Kurang).\n"
-                                                            f"3. **Analisis Aspek Utama** (Warna, Layout, Tipografi, Komposisi) beserta skor & teori pendukungnya.\n"
-                                                            f"4. **Tabel Ringkasan** (Aspek | Skor | Status).\n"
-                                                            f"5. **Rekomendasi Perbaikan** yang spesifik dan praktis."
+                                                            f"Kamu adalah AI yang berperan sebagai evaluator desain grafis profesional.\n\n"
+                                                            f"Tugas kamu adalah menganalisis kualitas sebuah desain (khususnya poster atau desain media sosial) "
+                                                            f"berdasarkan prinsip dan teori desain grafis yang telah diakui secara akademis.\n\n"
+                                                            f"Model sebelumnya mendeteksi desain ini sebagai '{top_class}' dengan tingkat kepercayaan {top_prob*100:.1f}%.\n\n"
+                                                            f"Gunakan pendekatan berikut dalam analisis:\n"
+                                                            f"1. Teori Gestalt (proximity, similarity, continuity, closure)\n"
+                                                            f"2. Psikologi warna\n"
+                                                            f"3. Aturan warna 60:30:10\n"
+                                                            f"4. Golden ratio / komposisi visual\n"
+                                                            f"5. Prinsip desain dasar:\n"
+                                                            f"   - Balance (keseimbangan)\n"
+                                                            f"   - Contrast (kontras)\n"
+                                                            f"   - Visual hierarchy (hierarki visual)\n"
+                                                            f"   - Alignment (perataan)\n"
+                                                            f"   - Repetition (pengulangan)\n"
+                                                            f"   - Proximity (kedekatan)\n"
+                                                            f"   - Unity (kesatuan)\n"
+                                                            f"6. Tipografi:\n"
+                                                            f"   - Readability\n"
+                                                            f"   - Legibility\n\n"
+                                                            f"Berikan output dengan format berikut:\n\n"
+                                                            f"1. Style desain (misalnya: Modern, Minimalist, Retro-Vintage, dll)\n"
+                                                            f"2. Skor total (0–100)\n"
+                                                            f"3. Kategori kualitas:\n"
+                                                            f"   - Sangat Baik (85–100)\n"
+                                                            f"   - Baik (70–84)\n"
+                                                            f"   - Cukup (55–69)\n"
+                                                            f"   - Kurang (<55)\n\n"
+                                                            f"4. Analisis detail per aspek:\n"
+                                                            f"   - Warna (berdasarkan psikologi warna & aturan 60:30:10)\n"
+                                                            f"   - Layout (grid system & golden ratio)\n"
+                                                            f"   - Tipografi (readability & hierarchy)\n"
+                                                            f"   - Komposisi (Gestalt & balance)\n\n"
+                                                            f"Untuk setiap aspek, berikan:\n"
+                                                            f"- Skor\n"
+                                                            f"- Penjelasan singkat berbasis teori\n"
+                                                            f"- Kesimpulan (baik / cukup / kurang)\n\n"
+                                                            f"5. Ringkasan dalam bentuk tabel (Aspek, Skor, Status)\n\n"
+                                                            f"6. Rekomendasi perbaikan yang spesifik, praktis, dan dapat diterapkan\n\n"
+                                                            f"Gunakan bahasa Indonesia yang formal namun tetap jelas dan mudah dipahami.\n"
+                                                            f"Pastikan analisis bersifat objektif, tidak subjektif, dan selalu dikaitkan dengan teori desain."
                                                         ),
                                                     },
                                                     {
                                                         "type": "image_url",
                                                         "image_url": {
-                                                            "url": f"data:image/png;base64,{encoded}",
-                                                            "detail": "auto",
+                                                            "url": f"data:image/png;base64,{encoded}"
                                                         },
                                                     },
                                                 ],
                                             },
                                         ],
-                                        max_tokens=1000,
+                                        max_tokens=1500,
                                     )
                                     ai_text = response.choices[0].message.content
-                                    if "I'm sorry" in ai_text or "can't assist" in ai_text:
-                                        st.warning("⚠️ GPT-4o menolak menganalisis gambar ini. Coba gunakan gambar desain yang lebih jelas.")
                                     st.session_state.ai_analysis = ai_text
                                 except Exception as e:
                                     st.error(f"GPT-4o error: {e}")
