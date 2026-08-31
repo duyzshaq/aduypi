@@ -1,7 +1,6 @@
 import streamlit as st
 import os
 import base64
-import cv2
 import numpy as np
 from io import BytesIO
 from PIL import Image
@@ -318,12 +317,7 @@ with tab_classify:
                         model = YOLO(model_path)
                         st.session_state.model = model
 
-                        # Save temp file for YOLO
-                        img_np = np.array(img)
-                        tmp_path = "/tmp/classify_input.png"
-                        cv2.imwrite(tmp_path, cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR))
-
-                        results = model.predict(tmp_path, verbose=False)
+                        results = model.predict(img, verbose=False)
                         st.session_state.predict_results = results
 
                     except Exception as e:
@@ -379,7 +373,7 @@ with tab_classify:
 
                     # ── Annotated image ──────────────────────────────────
                     im_arr = res.plot()
-                    im_rgb = cv2.cvtColor(im_arr, cv2.COLOR_BGR2RGB)
+                    im_rgb = im_arr[..., ::-1]
                     st.image(im_rgb, use_container_width=True)
 
                     # ── GPT-4o Analysis ───────────────────────────────────
