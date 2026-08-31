@@ -390,46 +390,28 @@ with tab_classify:
 
                                     client = openai.OpenAI(api_key=openai_key)
                                     system_prompt = (
-                                        "Kamu adalah AI yang berperan sebagai evaluator desain grafis profesional.\n\n"
-                                        "Tugas kamu adalah menganalisis kualitas sebuah desain (khususnya poster atau desain media sosial) "
-                                        "berdasarkan prinsip dan teori desain grafis yang telah diakui secara akademis.\n\n"
-                                        "Gunakan pendekatan berikut dalam analisis:\n"
-                                        "1. Teori Gestalt (proximity, similarity, continuity, closure)\n"
-                                        "2. Psikologi warna\n"
-                                        "3. Aturan warna 60:30:10\n"
-                                        "4. Golden ratio / komposisi visual\n"
-                                        "5. Prinsip desain dasar:\n"
-                                        "   - Balance (keseimbangan)\n"
-                                        "   - Contrast (kontras)\n"
-                                        "   - Visual hierarchy (hierarki visual)\n"
-                                        "   - Alignment (perataan)\n"
-                                        "   - Repetition (pengulangan)\n"
-                                        "   - Proximity (kedekatan)\n"
-                                        "   - Unity (kesatuan)\n"
-                                        "6. Tipografi:\n"
-                                        "   - Readability\n"
-                                        "   - Legibility\n\n"
-                                        "Berikan output dengan format berikut:\n\n"
-                                        "1. Style desain (misalnya: Modern, Minimalist, Retro-Vintage, dll)\n"
-                                        "2. Skor total (0–100)\n"
-                                        "3. Kategori kualitas:\n"
-                                        "   - Sangat Baik (85–100)\n"
-                                        "   - Baik (70–84)\n"
-                                        "   - Cukup (55–69)\n"
-                                        "   - Kurang (<55)\n\n"
-                                        "4. Analisis detail per aspek:\n"
-                                        "   - Warna (berdasarkan psikologi warna & aturan 60:30:10)\n"
-                                        "   - Layout (grid system & golden ratio)\n"
-                                        "   - Tipografi (readability & hierarchy)\n"
-                                        "   - Komposisi (Gestalt & balance)\n\n"
-                                        "Untuk setiap aspek, berikan:\n"
-                                        "- Skor\n"
-                                        "- Penjelasan singkat berbasis teori\n"
-                                        "- Kesimpulan (baik / cukup / kurang)\n\n"
-                                        "5. Ringkasan dalam bentuk tabel (Aspek, Skor, Status)\n\n"
-                                        "6. Rekomendasi perbaikan yang spesifik, praktis, dan dapat diterapkan\n\n"
-                                        "Gunakan bahasa Indonesia yang formal namun tetap jelas dan mudah dipahami.\n"
-                                        "Pastikan analisis bersifat objektif, tidak subjektif, dan selalu dikaitkan dengan teori desain."
+                                        "Kamu adalah AI evaluator dan pakar desain grafis profesional.\n"
+                                        "Tugasmu adalah menganalisis gambar desain grafis yang diunggah pengguna secara akademis dan komprehensif.\n\n"
+                                        "Formatlah jawabanmu PERSIS sesuai dengan struktur Markdown berikut (gunakan judul tebal, nilai skor, dan poin bintang):\n\n"
+                                        "### **Style Desain: [Nama Style] | Skor Total: [Angka]/100 | Kategori Mutu: [Sangat Baik/BAIK/Cukup/Kurang]**\n"
+                                        "*Evaluasi berdasarkan 7 Prinsip Desain Grafis Baku Akademis*\n\n"
+                                        "#### **1. ANALISIS PRINSIP GESTALT (Skor: [Angka]/100 - [Keterangan])**\n\n"
+                                        "* Penerapan Proximity...\n"
+                                        "* Similarity warna & Continuity visual...\n\n"
+                                        "#### **2. PSIKOLOGI WARNA & ATURAN 60:30:10 (Skor: [Angka]/100 - [Keterangan])**\n\n"
+                                        "* Warna dominan (60%)...\n"
+                                        "* Warna sekunder (30%)...\n"
+                                        "* Aksen warna (10%)...\n\n"
+                                        "#### **3. LAYOUT & GOLDEN RATIO (Skor: [Angka]/100 - [Keterangan])**\n\n"
+                                        "* Komposisi & keseimbangan tata letak...\n"
+                                        "* Penerapan Rule of Thirds / Grid / Golden Ratio...\n\n"
+                                        "#### **4. TIPOGRAFI & READABILITY (Skor: [Angka]/100 - [Keterangan])**\n\n"
+                                        "* Karakter jenis font & legibility...\n"
+                                        "* Hierarki visual tipografi...\n\n"
+                                        "#### **5. REKOMENDASI PERBAIKAN DESAIN:**\n\n"
+                                        "* Rekomendasi 1...\n"
+                                        "* Rekomendasi 2...\n"
+                                        "* Rekomendasi 3...\n"
                                     )
 
                                     user_text = (
@@ -470,11 +452,8 @@ with tab_classify:
 
                     if st.session_state.ai_analysis:
                         st.markdown("---")
-                        st.markdown("### 🤖 GPT-4o Design Analysis")
-                        st.markdown(
-                            f'<div class="ai-analysis-box">{st.session_state.ai_analysis}</div>',
-                            unsafe_allow_html=True,
-                        )
+                        st.markdown("### 🤖 GPT-4o Multimodal Design Analysis")
+                        st.markdown(st.session_state.ai_analysis)
 
         elif not uploaded_file:
             st.info("⬅️ Upload a design image to get started.")
